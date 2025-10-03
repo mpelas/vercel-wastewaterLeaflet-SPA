@@ -41,7 +41,8 @@
         info.addTo(map);
 
         // Direct URL (no proxy needed - CORS is configured on GCS)
-        const kmlUrl = 'https://storage.googleapis.com/wastewater_plants_spa/wastewater_no_swim_zones.kml';
+        //const kmlUrl = 'https://storage.googleapis.com/wastewater_plants_spa/wastewater_no_swim_zones.kml';
+        const kmlUrl = 'https://wastewater_plants_spa.storage.googleapis.com/wastewater_no_swim_zones.kml';
         
         // Load KML directly
         fetch(kmlUrl)

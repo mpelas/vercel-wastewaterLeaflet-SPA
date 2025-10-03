@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["https://*.vercel.app"],
+    "origin": ["*"],
     "method": ["GET", "HEAD"],
     "responseHeader": ["Content-Type", "Content-Length"],
     "maxAgeSeconds": 3600

@@ -40,17 +40,27 @@
         };
         info.addTo(map);
 
-        // CORS Proxy URL (use one of these services)
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        // Direct URL (no proxy needed - CORS is configured on GCS)
         const kmlUrl = 'https://storage.googleapis.com/wastewater_plants_spa/wastewater_no_swim_zones.kml';
         
-        // Load KML via proxy
-        fetch(proxyUrl + encodeURIComponent(kmlUrl))
-            .then(response => response.text())
+        // Load KML directly
+        fetch(kmlUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
             .then(kmlText => {
                 // Parse KML
                 const parser = new DOMParser();
                 const kml = parser.parseFromString(kmlText, 'text/xml');
+                
+                // Check for XML parsing errors
+                const parseError = kml.querySelector('parsererror');
+                if (parseError) {
+                    throw new Error('KML parsing error');
+                }
                 
                 // Convert KML to GeoJSON using omnivore
                 const kmlLayer = omnivore.kml.parse(kmlText);
@@ -82,8 +92,8 @@
                 info._div.innerHTML = '<h4>Wastewater Zones</h4>Click zones for info';
             })
             .catch(error => {
-                console.error('Error:', error);
-                info._div.innerHTML = '<h4>Error</h4>Failed to load KML';
+                console.error('Error loading KML:', error);
+                info._div.innerHTML = `<h4>Error</h4>Failed to load KML<br><small>${error.message}</small>`;
             });
 
         // Legend
